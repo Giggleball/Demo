@@ -1,3 +1,106 @@
+'use strict'
+// including the necessary modules
+const express = require( 'express' )
+const fs = require( 'fs' )
+const app = express()
+// in order to use bodyParser, you need to install and require it first
+const bodyParser = require('body-parser')
+
+// which visual template you'll be using 
+app.set( 'view engine', 'pug' )
+app.set( 'views', __dirname + '/views' )
+
+// Need this to use the middleware .body
+app.use( bodyParser.urlencoded({ extended: true }))
+
+// when home is requested, show the following
+app.get( '/', ( request, response ) => {
+	console.log( 'About to render index.pug' )
+	fs.readFile( __dirname + '/users.json', ( error, data ) => {
+		if ( error ) throw error
+			let parsedData = JSON.parse( data )
+		console.log( parsedData )
+		response.render( 'index', { data: parsedData } )
+	})
+})
+
+
+
+
+// Import necessary modules
+//const fs = require( 'fs' )
+
+// Helper functions to Round off # & make it more readible
+let roundD = ( number ) => {
+	return Math.round( number * 100 ) / 100
+} 
+let addCommas = ( number ) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+let prettyNr = ( number ) => {
+	return addCommas( roundD( number ) )
+}
+
+// Read the customer.json data
+
+fs.readFile( __dirname + '/customers.json', 'utf-8', ( err, data ) => {
+	// Parse the file to a readable object
+	let parsedData = JSON.parse( data )
+	calcCompound( parsedData )
+} )
+
+// Function to calculate compound interest from a customer object
+let calcCompound = ( customer ) => {
+	
+	// Set end amount prop calculate total duration
+	customer.pension.endamount = { 
+		pessimitic:	customer.finances.startcapital,
+		average: 	customer.finances.startcapital,
+		optimistic: customer.finances.startcapital
+	}
+	customer.pension.duration = (customer.pension.age - customer.age)
+	
+// starts with # times you loop, count down to 0, 
+	// Do the intrest math
+	for (var i = customer.pension.duration - 1; i >= 0; i--) {
+
+		// Add monthly spend to all scenarios9
+		customer.pension.endamount.pessimistic 	+= ( customer.finances.monthlyadd * 12 )
+		customer.pension.endamount.average 		+= ( customer.finances.monthlyadd * 12 )
+		customer.pension.endamount.optimistic 	+= ( customer.finances.monthlyadd * 12 )
+
+		// Calculate the added amount interest
+		customer.pension.endamount.pessimistic 	*= customer.pension.interest.pessimistic
+		customer.pension.endamount.average 		*= customer.pension.interest.average
+		customer.pension.endamount.optimistic 	*= customer.pension.interest.optimistic
+
+	}
+
+	// Output data
+	// Welcome out customer
+	console.log( " Welcome" + customer.name 	+ " to our advanced pension planner!")
+	console.log( "You are starting with " 		+ customer.finances.startcapital + " and add a monthly amount of " + customer.finances.monthlyadd)
+	console.log( "When you retire at age " 		+ customer.pension.age + " You will have the following: ")
+	
+	// Output calculation stuff
+	console.log( "In a pessimitic scenario: €" 	+ prettyNr( customer.pension.endamount.pessimitic))
+	console.log( "In a average scenario: €" 	+ prettyNr( customer.pension.endamount.average))
+	console.log( "In a optimistic scenario:	€" 	+ prettyNr( customer.pension.endamount.optimistic))
+}
+
+// exporting the file
+module.exports = calcCompound
+
+
+
+
+app.listen(8000, () => {
+	console.log( 'Server running' )
+})
+
+
+
+
 
 
 // Phase #1
@@ -30,3 +133,17 @@
 
 // Phase #UB3RL33T
 // Modify this whole app to run client side, so purely in chrome.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
