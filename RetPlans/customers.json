@@ -1,13 +1,15 @@
 {
-	"name": "Elisabeth",
-	"age": 26,
+	"fname": "Elisabeth",
+	"lname": "Boldewijn", 
+	"cage": 26,
+	"email": "boldewijn.eli@gmail.com",
 	"finances": {
-		"startcapital": 1000,
-		"monthlyadd": 1000
+		"startc": 1000,
+		"madd": 1000
 	},
 	"pension": {
-		"age": 65,
-		"interest": {
+		"rage": 65,
+		"inrate": {
 			"pessimistic": 1.02,
 			"average": 1.04,
 			"optimistic": 1.08

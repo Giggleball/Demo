@@ -1,0 +1,24 @@
+html
+	head
+	body
+		form(onsubmit='return false', oninput='amount.value = (principal.valueAsNumber * rate.valueAsNumber) / 100')
+			fieldset
+				legend(style='font-weight:bold;') Interest Calculator
+				label(for='principal') Amount to invest: $
+				input#principal(type='number', min='0', name='principal', value='1000')
+				p
+					label(for='rate') Interest Rate: 
+					input#rate(type='range', min='0', max='20', name='rate', value='0', oninput='thisRate.value = rate.value')
+					output(name='thisRate', for='rate') 0
+					span %
+				p
+					| Interest Received: 
+					strong
+						| $
+						output(name='amount', for='principal rate') 0
+
+
+
+
+
+
